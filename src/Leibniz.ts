@@ -9,7 +9,19 @@
 export type Eq<A, B> = ((x: A) => B) & ((x: B) => A);
 
 /**
- * Symmetry of Leibniz equality; TypeScript will _usualy_ be smart enough to
+ * Propositional type equality test. The third and fourth parameters are what
+ * the type alias will evaluate to if the types are equal or not equal,
+ * respectively.
+ */
+export type IfEq<A, B, Y = unknown, N = never> =
+    ((x: A) => B) extends ((x: B) => A)
+    ? ((x: B) => A) extends ((x: A) => B)
+        ? Y
+        : N
+    : N;
+
+/**
+ * Symmetry of Leibniz equality; TypeScript will usually be smart enough to
  * figure out the symmetry without this, but not always.
  */
 export function sym<A, B>(p: Eq<A, B>): Eq<B, A> {

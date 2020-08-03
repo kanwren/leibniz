@@ -3,7 +3,7 @@ import {
     NotEq,
     Sub, NotSub, StrictSub, NotStrictSub,
     Super, NotSuper, StrictSuper, NotStrictSuper,
-    Disjoint
+    Disjoint, Related
 } from "./Proofs";
 
 /**
@@ -70,28 +70,6 @@ export function testEq<A, B, _doc = "">(p: Eq<A, B>): Eq<A, B> {
  * </code>
  */
 export function testNotEq<A, B, _doc = "">(p: NotEq<A, B>): NotEq<A, B> {
-    return p;
-}
-
-/**
- * Test that the two types are disjoint (neither is assignable to the other).
- * The optional third type parameter may be used to document the purpose of the
- * test. For example:
- *
- * <code>
- * testDisjoint<
- *     undefined,
- *     number,
- *     "undefined and number are not assignable to each other"
- * >(refl);
- * testDisjoint<
- *     4,
- *     number,
- *     "this test will fail, since 4 is assignable to number"
- * >(refl);
- * </code>
- */
-export function testDisjoint<A, B, _doc = "">(p: Disjoint<A, B>): Disjoint<A, B> {
     return p;
 }
 
@@ -220,11 +198,11 @@ export function testSuper<A, B, _doc = "">(p: Super<A, B>): Super<A, B> {
  * type parameter may be used to document the purpose of the test. For example:
  *
  * <code>
- * let x = 4;
- * testStrictSuper<
+ * const x = 4;
+ * testNotSuper<
  *     typeof x,
  *     4,
- *     "let infers a broader type than a literal type"
+ *     "const does not infer a broader type than a literal type"
  * >(refl);
  * </code>
  *
@@ -260,7 +238,7 @@ export function testStrictSuper<A, B, _doc = "">(p: StrictSuper<A, B>): StrictSu
  *
  * <code>
  * let x = 4;
- * testStrictSuper<
+ * testNotStrictSuper<
  *     typeof x,
  *     4,
  *     "let infers a broader type than a literal type"
@@ -271,6 +249,68 @@ export function testStrictSuper<A, B, _doc = "">(p: StrictSuper<A, B>): StrictSu
  * disjoint (incomparable).
  */
 export function testNotStrictSuper<A, B, _doc = "">(p: NotStrictSuper<A, B>): NotStrictSuper<A, B> {
+    return p;
+}
+
+/**
+ * Test that the two types are related (one is assignable to the other).
+ * The optional third type parameter may be used to document the purpose of the
+ * test. For example:
+ *
+ * <code>
+ * testRelated<
+ *     3,
+ *     number,
+ *     "3 and number are related"
+ * >(refl);
+ * testRelated<
+ *     number,
+ *     3,
+ *     "number and 3 are also related"
+ * >(refl);
+ * </code>
+ */
+export function testRelated<A, B, _doc = "">(p: Related<A, B>): Related<A, B> {
+    return p;
+}
+
+/**
+ * Test that the two types are disjoint (neither is assignable to the other).
+ * The optional third type parameter may be used to document the purpose of the
+ * test. For example:
+ *
+ * <code>
+ * testDisjoint<
+ *     undefined,
+ *     number,
+ *     "undefined and number are not assignable to each other"
+ * >(refl);
+ * testDisjoint<
+ *     4,
+ *     number,
+ *     "this test will fail, since 4 is assignable to number"
+ * >(refl);
+ * </code>
+ */
+export function testDisjoint<A, B, _doc = "">(p: Disjoint<A, B>): Disjoint<A, B> {
+    return p;
+}
+
+/**
+ * Test a custom relationship on two types, composed of other defined Leibniz
+ * equality relationships. This can be used to define all other 'test'
+ * functions. The optional second type parameter may be used to document the
+ * purpose of the test. For example:
+ *
+ * <code>
+ * // Test that types are related (same as testRelated)
+ * testRel<Sub<3, number> | Super<3, number>>(refl);
+ *
+ * // Test that types are related, but not equal.
+ * testRel<Related<3, number> & NotEq<3, number>>(refl);
+ * </code>
+ */
+export function testRel<R extends Function, _doc = "">(p: R): R {
     return p;
 }
 
