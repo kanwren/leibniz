@@ -127,20 +127,3 @@ export function testSuper<A, _ extends A, _doc = "">(): void {}
  */
 export function test<_doc = "">(_: () => void): void {}
 
-/**
- * Curry a two-argument function. This can be useful when partially applying a
- * function to test that a given invocation does not compile.
- */
-export function curry2<A, B, R>(f: (x: A, y: B) => R): (x: A) => (y: B) => R {
-    return x => y => f(x, y);
-}
-
-/**
- * Flip the order of the first two arguments of a curried function. This can be
- * useful when partially applying a function to test that a given invocation
- * does not compile.
- */
-export function flip<A, B, R>(f: (x: A) => (y: B) => R): (y: B) => (x: A) => R {
-    return y => x => f(x)(y);
-}
-
