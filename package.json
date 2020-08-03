@@ -1,7 +1,7 @@
 {
   "name": "@nprindle/leibniz",
   "version": "0.0.1",
-  "description": "",
+  "description": "A small TypeScript framework for unit testing types using Leibniz equality",
   "main": "dist/index.umd.js",
   "module": "dist/index.es5.js",
   "types": "dist/types/index.d.ts",
@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/nprindle/leibniz#readme",
   "keywords": [
-    "typescript"
+    "typescript",
+    "leibniz"
   ]
 }
