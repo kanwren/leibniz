@@ -17,6 +17,7 @@ A small TypeScript framework for unit testing types using Leibniz equality.
         * [Basic examples](#basic-examples)
         * [Testing for properties](#testing-for-properties)
         * [Safe JSON encoding](#safe-json-encoding)
+* [Caveats](#caveats)
 
 ## Motivation
 
@@ -412,4 +413,32 @@ Now, if we later incorrectly change the type of `JsonValue` to accept
 `undefined`, our tests will fail to compile, and we can catch the error before
 release! Note that in addition to making sure that certain code will compile,
 `leibniz` can also be used to make sure that certain code _won't_ compile.
+
+## Caveats
+
+TypeScript's type system is not sound. By its nature, there are many deliberate
+holes in the type system, only some of which can be turned off. Because of this,
+there are two primary caveats to using `leibniz` as a consequence of
+TypeScript's type system:
+
+1. You need strict type checking enabled. Without it, there are too many unsound
+   type system holes, like bivariant parameter checking, that make it impossible
+   to soundly prove anything with the type system.
+2. Like pineapple in gelatin, `leibniz` proofs dissolve whenever an `any` is
+   introduced, since it's an intentional hole in the type system. `leibniz`
+   works off of type equality, and `any` can be equal to any type. For example:
+
+```ts
+const lemma: Eq<any, any> = refl;
+
+// fails, since number != string
+const proof1: Eq<number, string> = refl;
+
+// succeeds, because 'any' is evil
+const proof2: Eq<number, string> = lemma;
+```
+
+Fortunately, most users that care enough about types to want to test them will
+already have strict type checking enabled. With respect to avoiding `any`, it's
+best to prefer `unknown` in any circumstances where type safety matters.
 
