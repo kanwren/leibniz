@@ -27,6 +27,26 @@ import {
 export function test<_doc = "">(_: () => void): void {}
 
 /**
+ * Test properties that use universal quantification. The optional second type
+ * parameter may be used to document the purpose of the test. For example:
+ *
+ * <code>
+ * forall<
+ *     <T>() => Eq<T | never, T>
+ *     "never is an identity element under union"
+ * >(refl);
+ *
+ * forall<
+ *     <T>() => Eq<T & never, never>
+ *     "never is an annihilating element under intersection"
+ * >(refl);
+ * </code>
+ */
+export function forall<T extends () => unknown = never, _doc = "">(x: ReturnType<T>): ReturnType<T> {
+    return x;
+}
+
+/**
  * Test that two types are equal. The optional third type parameter may be used
  * to document the purpose of the test. Usually, it suffices to pass 'refl' as
  * the only argument; this is needed to instantiate the impredicative type. For

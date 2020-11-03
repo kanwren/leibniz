@@ -13,6 +13,7 @@ A small TypeScript framework for unit testing types using Leibniz equality.
         * [Basic tests](#basic-tests)
         * [Relation tests](#relation-tests)
         * [Custom relation tests](#custom-relation-tests)
+        * [Universally quantified tests](#universally-quantified-tests)
     * [Examples](#examples)
         * [Basic examples](#basic-examples)
         * [Testing for properties](#testing-for-properties)
@@ -229,6 +230,37 @@ testRel<
 testRel<
     Sub<A, B> & NotEq<A, B>
     "same as testStrictSub<A, B>"
+>(refl);
+```
+
+#### Universally quantified tests
+
+The `forall` combinator is similar to `testRel`, except it allows you to write
+tests that work off of one or more universally quantified type parameters. This
+is useful when proving properties about generic functions.
+
+As an example, TypeScripts union (`|`) and intersection (`&`) form an algebra.
+Lets prove some basic rules in the algebra as an example:
+
+```ts
+forall<
+    <T>() => Eq<T | never, T>,
+    "never is an identity element under union"
+>(refl);
+
+forall<
+    <T>() => Eq<T & never, never>,
+    "never is an annihilating element under intersection"
+>(refl);
+
+forall<
+    <T>() => Eq<T | unknown, unknown>,
+    "unknown is an annihilating element under union"
+>(refl);
+
+forall<
+    <T>() => Eq<T & unknown, T>,
+    "unknown is an identity element under intersection"
 >(refl);
 ```
 
